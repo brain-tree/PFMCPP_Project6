@@ -94,15 +94,16 @@ struct U
                 ++this->uObject2;
                 --this->uObject1;
             }
-            std::cout << "U's uObject2 updated value: " << this->uObject2 << std::endl;
-            return this->uObject2 * this->uObject1;
+            
         }
+        std::cout << "U's uObject2 updated value: " << this->uObject2 << std::endl;
+        return this->uObject2 * this->uObject1;
     }
 };
 
 struct FourthClass
 {
-    static float staticDoAThing(U* that, int* valueUpdated)        //10
+    static float staticDoAThing(U* that, float* valueUpdated)        //10
     {
         if(that && valueUpdated != nullptr)
         {
@@ -118,9 +119,9 @@ struct FourthClass
                 --that->uObject1;
 //            that->uObject2 += ;
             }
-            std::cout << "U's uObject2 updated value: " << that->uObject2 << std::endl;
-            return that->uObject2 * that->uObject1;
         }
+        std::cout << "U's uObject2 updated value: " << that->uObject2 << std::endl;
+        return that->uObject2 * that->uObject1;
     }
 };
         
@@ -144,7 +145,7 @@ int main()
     T tSecondInst(0, "B");                                             //6
     
     auto f = SecondClass{};                                            //7
-    auto* smaller = f.compare(0, 0);                              //8
+    auto* smaller = f.compare(&tFirstInst, &tSecondInst);                       //8
     if(smaller != nullptr)
     {
         std::cout << "the smaller one is << " << smaller->name << std::endl; //9
@@ -156,7 +157,7 @@ int main()
 
     U uFirstInst;
     float updatedValue = 5.f;
-    std::cout << "[static func] <#name3#>'s multiplied values: " << FourthClass::staticDoAThing(0, 0) << std::endl;                  //11
+    std::cout << "[static func] uFirstInst's multiplied values: " << FourthClass::staticDoAThing(&uFirstInst, &updatedValue) << std::endl;         //11
     
     U uSecondInst;
     std::cout << "[member func] uSecondInst's multiplied values: " << uSecondInst.uDoAThing( &updatedValue ) << std::endl;
