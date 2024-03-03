@@ -56,6 +56,7 @@ Purpose:  This project will show you the difference between member functions and
 
 #include <iostream>
 #include <string>
+
 struct T
 {
     T(int v, const char* tVariableName)   //1
@@ -69,7 +70,7 @@ struct T
 
 struct SecondClass                                //4
 {
-    auto compare(int a, int b) //5
+    T* compare(T* a, T* b) //5
     {
         if( a->value < b->value ) return a;
         if( a->value > b->value ) return b;
@@ -79,21 +80,34 @@ struct SecondClass                                //4
 
 struct U
 {
-    float uObject1 { 1.f }, uObject2 { 0.1f };
+    float uObject1 { 10.f }, uObject2 { 0.01f };
+    
     float uDoAThing(float* updatedUObject)      //12
     {
-        
+        if(updatedUObject != nullptr)
+        {
+            std::cout << "U's uObject1 value: " << this->uObject1 << std::endl;
+            this->uObject1 = *updatedUObject;
+            std::cout << "U's uObject1 updated value: " << this->uObject1 << std::endl;
+            while( std::abs(this->uObject2 - this->uObject1) > 0.001f )
+            {
+                ++this->uObject2;
+                --this->uObject1;
+            }
+            std::cout << "U's uObject2 updated value: " << this->uObject2 << std::endl;
+            return this->uObject2 * this->uObject1;
+        }
     }
 };
 
 struct FourthClass
 {
-    if(U != nullptr)
+    static float staticDoAThing(U* that, int* valueUpdated)        //10
     {
-        static int staticDoAThing(U* that, int* valueUpdated)        //10
+        if(that && valueUpdated != nullptr)
         {
             std::cout << "U's uObject1 value: " << that->uObject1 << std::endl;
-            that->uObject1 = valueUpdated;
+            that->uObject1 = *valueUpdated;
             std::cout << "U's uObject1 updated value: " << that->uObject1 << std::endl;
             while( std::abs(that->uObject2 - that->uObject1) > 0.001f )
             {
@@ -102,7 +116,7 @@ struct FourthClass
              */
                 ++that->uObject2;
                 --that->uObject1;
-    //            that->uObject2 += ;
+//            that->uObject2 += ;
             }
             std::cout << "U's uObject2 updated value: " << that->uObject2 << std::endl;
             return that->uObject2 * that->uObject1;
@@ -129,7 +143,7 @@ int main()
     T tFirstInst(0, "A");                                             //6
     T tSecondInst(0, "B");                                             //6
     
-    auto f;                                            //7
+    auto f = SecondClass{};                                            //7
     auto* smaller = f.compare(0, 0);                              //8
     if(smaller != nullptr)
     {
@@ -137,7 +151,7 @@ int main()
     }
     else
     {
-        std::cout << "nullptr. The value of a or b needs to be greater than or lesser than the other." << endl;
+        std::cout << "nullptr. The value of a or b needs to be greater than or lesser than the other." << std::endl;
     }
 
     U uFirstInst;
@@ -145,5 +159,5 @@ int main()
     std::cout << "[static func] <#name3#>'s multiplied values: " << FourthClass::staticDoAThing(0, 0) << std::endl;                  //11
     
     U uSecondInst;
-    std::cout << "[member func] <#name4#>'s multiplied values: " << <#name4#>.<#memberFunction#>( &updatedValue ) << std::endl;
+    std::cout << "[member func] uSecondInst's multiplied values: " << uSecondInst.uDoAThing( &updatedValue ) << std::endl;
 }
