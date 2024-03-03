@@ -72,7 +72,7 @@ struct SecondClass                                //4
 {
     T* compare(T* a, T* b) //5
     {
-        if(a && b != nullptr)
+        if(a != nullptr && b != nullptr)
         {
             if( a->value < b->value ) return a;
             if( a->value > b->value ) return b;
@@ -111,7 +111,7 @@ struct FourthClass
 {
     static float staticDoAThing(U* that, float* valueUpdated)        //10
     {
-        if(that && valueUpdated != nullptr)
+        if(that != nullptr && valueUpdated != nullptr)
         {
             std::cout << "U's uObject1 value: " << that->uObject1 << std::endl;
             that->uObject1 = *valueUpdated;
