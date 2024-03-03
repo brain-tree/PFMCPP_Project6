@@ -72,8 +72,11 @@ struct SecondClass                                //4
 {
     T* compare(T* a, T* b) //5
     {
-        if( a->value < b->value ) return a;
-        if( a->value > b->value ) return b;
+        if(a && b != nullptr)
+        {
+            if( a->value < b->value ) return a;
+            if( a->value > b->value ) return b;
+        }
         return nullptr;
     }
 };
@@ -93,6 +96,9 @@ struct U
             {
                 ++this->uObject2;
                 --this->uObject1;
+
+                if(this->uObject2 > this->uObject1)
+                    break;
             }
             
         }
@@ -117,7 +123,9 @@ struct FourthClass
              */
                 ++that->uObject2;
                 --that->uObject1;
-//            that->uObject2 += ;
+
+                if(that->uObject2 > that->uObject1)
+                    break;
             }
         }
         std::cout << "U's uObject2 updated value: " << that->uObject2 << std::endl;
