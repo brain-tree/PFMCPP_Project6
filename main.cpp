@@ -41,13 +41,11 @@ struct T
 
 struct SecondClass                                //4
 {
-    T* compare(T* a, T* b) //5
+    T* compare(T& a, T& b) //5
     {
-        if(a != nullptr && b != nullptr)
-        {
-            if( a->value < b->value ) return a;
-            if( a->value > b->value ) return b;
-        }
+        if( a.value < b.value ) return &a;
+        if( a.value > b.value ) return &b;
+
         return nullptr;
     }
 };
@@ -56,22 +54,18 @@ struct U
 {
     float uObject1 { 10.f }, uObject2 { 0.01f };
     
-    float uDoAThing(float* updatedUObject)      //12
+    float uDoAThing(float& updatedUObject)      //12
     {
-        if(updatedUObject != nullptr)
+        std::cout << "U's uObject1 value: " << this->uObject1 << std::endl;
+        this->uObject1 = updatedUObject;
+        std::cout << "U's uObject1 updated value: " << this->uObject1 << std::endl;
+        while( std::abs(this->uObject2 - this->uObject1) > 0.001f )
         {
-            std::cout << "U's uObject1 value: " << this->uObject1 << std::endl;
-            this->uObject1 = *updatedUObject;
-            std::cout << "U's uObject1 updated value: " << this->uObject1 << std::endl;
-            while( std::abs(this->uObject2 - this->uObject1) > 0.001f )
-            {
-                ++this->uObject2;
-                --this->uObject1;
+            ++this->uObject2;
+            --this->uObject1;
 
-                if(this->uObject2 > this->uObject1)
-                    break;
-            }
-            
+            if(this->uObject2 > this->uObject1)
+                break;            
         }
         std::cout << "U's uObject2 updated value: " << this->uObject2 << std::endl;
         return this->uObject2 * this->uObject1;
@@ -80,27 +74,21 @@ struct U
 
 struct FourthClass
 {
-    static float staticDoAThing(U* that, float* valueUpdated)        //10
+    static float staticDoAThing(U& that, float& valueUpdated)        //10
     {
-        if(that != nullptr && valueUpdated != nullptr)
+        std::cout << "U's uObject1 value: " << that.uObject1 << std::endl;
+        that.uObject1 = valueUpdated;
+        std::cout << "U's uObject1 updated value: " << that.uObject1 << std::endl;
+        while( std::abs(that.uObject2 - that.uObject1) > 0.001f )
         {
-            std::cout << "U's uObject1 value: " << that->uObject1 << std::endl;
-            that->uObject1 = *valueUpdated;
-            std::cout << "U's uObject1 updated value: " << that->uObject1 << std::endl;
-            while( std::abs(that->uObject2 - that->uObject1) > 0.001f )
-            {
-                /*
-                write something that makes the distance between that->uObject2 and that->uObject1 get smaller
-             */
-                ++that->uObject2;
-                --that->uObject1;
+            ++that.uObject2;
+            --that.uObject1;
 
-                if(that->uObject2 > that->uObject1)
-                    break;
-            }
+            if(that.uObject2 > that.uObject1)
+                break;
         }
-        std::cout << "U's uObject2 updated value: " << that->uObject2 << std::endl;
-        return that->uObject2 * that->uObject1;
+        std::cout << "U's uObject2 updated value: " << that.uObject2 << std::endl;
+        return that.uObject2 * that.uObject1;
     }
 };
         
@@ -124,7 +112,7 @@ int main()
     T tSecondInst(0, "B");                                             //6
     
     auto f = SecondClass{};                                            //7
-    auto* smaller = f.compare(&tFirstInst, &tSecondInst);                       //8
+    auto* smaller = f.compare(tFirstInst, tSecondInst);                       //8
     if(smaller != nullptr)
     {
         std::cout << "the smaller one is << " << smaller->name << std::endl; //9
@@ -136,8 +124,8 @@ int main()
 
     U uFirstInst;
     float updatedValue = 5.f;
-    std::cout << "[static func] uFirstInst's multiplied values: " << FourthClass::staticDoAThing(&uFirstInst, &updatedValue) << std::endl;         //11
+    std::cout << "[static func] uFirstInst's multiplied values: " << FourthClass::staticDoAThing(uFirstInst, updatedValue) << std::endl;         //11
     
     U uSecondInst;
-    std::cout << "[member func] uSecondInst's multiplied values: " << uSecondInst.uDoAThing( &updatedValue ) << std::endl;
+    std::cout << "[member func] uSecondInst's multiplied values: " << uSecondInst.uDoAThing( updatedValue ) << std::endl;
 }
